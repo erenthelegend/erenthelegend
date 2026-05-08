@@ -1,0 +1,1810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eren Erarslan — Judoka & Gamer</title>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;900&family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --neon: #00aaff;
+    --neon2: #0066ff;
+    --neon3: #00eeff;
+    --dark: #020a14;
+    --dark2: #050f1e;
+    --white: #e8f4ff;
+    --accent: #ff6b00;
+    --glow: 0 0 10px #00aaff88, 0 0 30px #0066ff55, 0 0 60px #00aaff22;
+    --glow-strong: 0 0 20px #00aaffcc, 0 0 60px #0066ffaa, 0 0 100px #00aaff55;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--white);
+    font-family: 'Exo 2', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--neon);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 99999;
+    box-shadow: var(--glow-strong);
+    transition: transform 0.1s ease;
+    mix-blend-mode: screen;
+  }
+  .cursor-trail {
+    width: 40px; height: 40px;
+    border: 1px solid var(--neon);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 99998;
+    opacity: 0.4;
+    transition: transform 0.3s ease, left 0.15s ease, top 0.15s ease;
+  }
+
+  /* SOUNDWAVE BACKGROUND */
+  #soundwave-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    opacity: 0.55;
+  }
+
+  /* PARTICLE FIELD */
+  #particle-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 1;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 1.2rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(to bottom, rgba(2,10,20,0.95), transparent);
+    backdrop-filter: blur(2px);
+    border-bottom: 1px solid rgba(0,170,255,0.1);
+  }
+
+  .nav-logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: var(--neon);
+    text-shadow: var(--glow);
+    letter-spacing: 2px;
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: rgba(232,244,255,0.7);
+    text-decoration: none;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all 0.3s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0; right: 0;
+    height: 1px;
+    background: var(--neon);
+    box-shadow: var(--glow);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+  }
+  .nav-links a:hover { color: var(--neon); text-shadow: var(--glow); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6rem 2rem 4rem;
+    overflow: hidden;
+  }
+
+  .hero-content {
+    position: relative;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    padding: 0.4rem 1.2rem;
+    border: 1px solid var(--neon);
+    border-radius: 100px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    color: var(--neon);
+    text-transform: uppercase;
+    box-shadow: var(--glow);
+    margin-bottom: 2rem;
+    animation: fadeInDown 0.8s ease forwards;
+    opacity: 0;
+  }
+
+  .hero-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(3rem, 9vw, 8rem);
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -2px;
+    background: linear-gradient(90deg,
+      #ff0018 0%,
+      #ff7a00 16.6%,
+      #ffff00 33.3%,
+      #00c000 50%,
+      #0000f0 66.6%,
+      #8b00ff 83.3%,
+      #ff0018 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: fadeInUp 1s 0.3s ease forwards, rainbow-pulse 3s linear infinite;
+    opacity: 0;
+    text-shadow: none;
+  }
+
+  @keyframes rainbow-pulse {
+    0%   { background-position: 0% center;   filter: drop-shadow(0 0 20px #ff0018cc); }
+    17%  { filter: drop-shadow(0 0 30px #ff7a00cc); }
+    33%  { background-position: 50% center;  filter: drop-shadow(0 0 30px #ffff00bb); }
+    50%  { filter: drop-shadow(0 0 30px #00c000cc); }
+    67%  { background-position: 100% center; filter: drop-shadow(0 0 30px #0000f0cc); }
+    83%  { filter: drop-shadow(0 0 30px #8b00ffcc); }
+    100% { background-position: 200% center; filter: drop-shadow(0 0 20px #ff0018cc); }
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+    color: rgba(232,244,255,0.6);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    font-family: 'Space Mono', monospace;
+    margin-top: 1rem;
+    animation: fadeInUp 1s 0.5s ease forwards;
+    opacity: 0;
+  }
+
+  .hero-flags {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    animation: fadeInUp 1s 0.7s ease forwards;
+    opacity: 0;
+  }
+
+  .flag-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(0,170,255,0.08);
+    border: 1px solid rgba(0,170,255,0.25);
+    padding: 0.4rem 1rem;
+    border-radius: 100px;
+    font-size: 0.8rem;
+    font-family: 'Space Mono', monospace;
+    backdrop-filter: blur(10px);
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    animation: fadeInUp 1s 1.2s ease forwards;
+    opacity: 0;
+  }
+  .scroll-text { font-family: 'Space Mono', monospace; font-size: 0.6rem; letter-spacing: 3px; color: var(--neon); opacity: 0.7; }
+  .scroll-line {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--neon), transparent);
+    animation: scroll-pulse 1.5s ease-in-out infinite;
+  }
+
+  /* GLITCH TEXT EFFECT */
+  .glitch {
+    position: relative;
+    display: inline-block;
+  }
+  .glitch::before, .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    background: linear-gradient(90deg,#ff0018,#ff7a00,#ffff00,#00c000,#0000f0,#8b00ff,#ff0018);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .glitch::before {
+    animation: glitch1 3s infinite;
+    clip-path: polygon(0 30%, 100% 30%, 100% 50%, 0 50%);
+  }
+  .glitch::after {
+    animation: glitch2 3s infinite;
+    clip-path: polygon(0 55%, 100% 55%, 100% 80%, 0 80%);
+  }
+
+  /* SECTIONS */
+  section {
+    position: relative;
+    z-index: 10;
+  }
+
+  .section-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 6rem 2rem;
+  }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 4px;
+    color: var(--neon);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    opacity: 0.8;
+  }
+
+  .section-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 2rem;
+    background: linear-gradient(135deg, #fff, var(--neon));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .about-text p {
+    color: rgba(232,244,255,0.75);
+    line-height: 1.9;
+    margin-bottom: 1.2rem;
+    font-size: 1rem;
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .stat-card {
+    background: rgba(0,170,255,0.05);
+    border: 1px solid rgba(0,170,255,0.2);
+    border-radius: 12px;
+    padding: 1.2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--neon), transparent);
+    animation: shimmer 2s ease-in-out infinite;
+  }
+  .stat-card:hover {
+    border-color: var(--neon);
+    box-shadow: var(--glow);
+    transform: translateY(-4px);
+  }
+  .stat-value {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--neon);
+    text-shadow: var(--glow);
+  }
+  .stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    color: rgba(232,244,255,0.5);
+    margin-top: 0.3rem;
+    text-transform: uppercase;
+  }
+
+  /* PROFILE AVATAR */
+  .avatar-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .avatar-ring {
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    border: 2px solid var(--neon);
+    box-shadow: var(--glow-strong), inset 0 0 40px rgba(0,170,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    animation: spin-slow 20s linear infinite;
+  }
+  .avatar-ring::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border-radius: 50%;
+    border: 1px dashed rgba(0,170,255,0.3);
+  }
+  .avatar-ring::after {
+    content: '';
+    position: absolute;
+    inset: -20px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,170,255,0.1);
+    animation: spin-slow 15s linear infinite reverse;
+  }
+
+  .avatar-inner {
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, rgba(0,170,255,0.3), rgba(0,20,60,0.9));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 7rem;
+    border: 1px solid rgba(0,170,255,0.3);
+    animation: spin-slow 20s linear infinite reverse;
+  }
+
+  .orbit-dot {
+    position: absolute;
+    width: 10px; height: 10px;
+    background: var(--neon);
+    border-radius: 50%;
+    box-shadow: var(--glow-strong);
+    top: -5px; left: 50%;
+    transform-origin: 0 165px;
+  }
+
+  /* JUDO SECTION */
+  .judo-section { background: linear-gradient(to bottom, transparent, rgba(0,102,255,0.04), transparent); }
+
+  .judo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .judo-card {
+    background: rgba(0,10,30,0.6);
+    border: 1px solid rgba(0,170,255,0.15);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s;
+    backdrop-filter: blur(10px);
+  }
+  .judo-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0; top: 0;
+    background: radial-gradient(ellipse at 50% 100%, rgba(0,170,255,0.08), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .judo-card:hover::before { opacity: 1; }
+  .judo-card:hover {
+    border-color: rgba(0,170,255,0.5);
+    box-shadow: var(--glow);
+    transform: translateY(-8px);
+  }
+
+  .judo-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+    animation: float 3s ease-in-out infinite;
+  }
+  .judo-card:nth-child(2) .judo-icon { animation-delay: 0.5s; }
+  .judo-card:nth-child(3) .judo-icon { animation-delay: 1s; }
+
+  .judo-card h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    color: var(--neon);
+    margin-bottom: 0.8rem;
+    letter-spacing: 1px;
+  }
+  .judo-card p {
+    font-size: 0.88rem;
+    color: rgba(232,244,255,0.65);
+    line-height: 1.7;
+  }
+
+  /* BELT DISPLAY */
+  .belt-container {
+    margin-top: 3rem;
+    background: rgba(0,10,30,0.6);
+    border: 1px solid rgba(0,170,255,0.2);
+    border-radius: 20px;
+    padding: 2.5rem;
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+  }
+  .belt-container::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--neon), var(--neon3), transparent);
+    animation: shimmer 3s ease infinite;
+  }
+
+  .belt-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    color: var(--neon);
+    letter-spacing: 3px;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+  }
+
+  .belt-visual {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .belt-strip {
+    height: 40px;
+    flex: 1;
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+  }
+  .belt-strip::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    animation: shimmer 2s ease infinite;
+  }
+
+  .belt-blue {
+    background: linear-gradient(135deg, #1a4aff, #0033cc);
+    box-shadow: 0 0 20px rgba(0,51,204,0.5);
+  }
+  .belt-rank {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    color: rgba(232,244,255,0.8);
+    white-space: nowrap;
+  }
+
+  /* GAMING SECTION */
+  .gaming-section { background: linear-gradient(to bottom, transparent, rgba(0,50,150,0.05), transparent); }
+
+  .gaming-hero {
+    text-align: center;
+    margin-bottom: 4rem;
+    padding: 4rem 2rem;
+    background: rgba(0,10,30,0.5);
+    border: 1px solid rgba(0,170,255,0.15);
+    border-radius: 24px;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+  }
+  .gaming-hero::before {
+    content: 'ROBLOX';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 15rem;
+    font-weight: 900;
+    color: rgba(0,170,255,0.025);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .gaming-emoji {
+    font-size: 4rem;
+    animation: float 2s ease-in-out infinite;
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .gaming-hero h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    color: var(--neon);
+    text-shadow: var(--glow);
+    margin-bottom: 1rem;
+  }
+
+  .gaming-hero p {
+    max-width: 600px;
+    margin: 0 auto;
+    color: rgba(232,244,255,0.7);
+    line-height: 1.8;
+    font-size: 0.95rem;
+  }
+
+  .games-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .game-card {
+    background: rgba(0,10,30,0.7);
+    border: 1px solid rgba(0,170,255,0.2);
+    border-radius: 20px;
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s;
+    backdrop-filter: blur(10px);
+  }
+  .game-card:hover {
+    border-color: var(--neon);
+    box-shadow: var(--glow);
+    transform: translateY(-8px);
+  }
+
+  .game-card-bg {
+    position: absolute;
+    top: 0; right: 0;
+    font-size: 12rem;
+    opacity: 0.04;
+    line-height: 1;
+    pointer-events: none;
+    transform: translate(20%, -10%);
+    transition: transform 0.4s, opacity 0.4s;
+  }
+  .game-card:hover .game-card-bg { transform: translate(15%, -5%); opacity: 0.07; }
+
+  .game-tag {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    background: rgba(0,170,255,0.1);
+    border: 1px solid rgba(0,170,255,0.3);
+    border-radius: 100px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    color: var(--neon);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .game-icon { font-size: 3rem; margin-bottom: 1rem; display: block; }
+
+  .game-card h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.4rem;
+    color: var(--white);
+    margin-bottom: 1rem;
+  }
+
+  .game-card p {
+    font-size: 0.9rem;
+    color: rgba(232,244,255,0.65);
+    line-height: 1.8;
+  }
+
+  .game-stats {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(0,170,255,0.1);
+  }
+  .game-stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  .game-stat-val {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    color: var(--neon);
+    font-weight: 700;
+  }
+  .game-stat-key {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 1px;
+    color: rgba(232,244,255,0.4);
+    text-transform: uppercase;
+  }
+
+  /* TIMELINE */
+  .timeline {
+    position: relative;
+    margin-top: 3rem;
+    padding-left: 2rem;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0; left: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--neon), var(--neon2), transparent);
+    box-shadow: var(--glow);
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 2.5rem;
+    padding-left: 2rem;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideIn 0.5s ease forwards;
+  }
+  .timeline-item:nth-child(1) { animation-delay: 0.1s; }
+  .timeline-item:nth-child(2) { animation-delay: 0.2s; }
+  .timeline-item:nth-child(3) { animation-delay: 0.3s; }
+  .timeline-item:nth-child(4) { animation-delay: 0.4s; }
+  .timeline-item:nth-child(5) { animation-delay: 0.5s; }
+
+  .timeline-dot {
+    position: absolute;
+    left: -2.45rem;
+    top: 0.3rem;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--neon);
+    box-shadow: var(--glow-strong);
+    border: 2px solid var(--dark);
+  }
+
+  .timeline-year {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.75rem;
+    color: var(--neon);
+    letter-spacing: 2px;
+    margin-bottom: 0.4rem;
+  }
+  .timeline-text {
+    font-size: 0.95rem;
+    color: rgba(232,244,255,0.75);
+    line-height: 1.7;
+  }
+  .timeline-title {
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 700;
+    color: var(--white);
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+  }
+
+  /* PERSONALITY */
+  .traits-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .trait-card {
+    background: rgba(0,10,30,0.6);
+    border: 1px solid rgba(0,170,255,0.15);
+    border-radius: 16px;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .trait-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--neon), var(--neon3));
+    transform: scaleX(0);
+    transition: transform 0.3s;
+    box-shadow: var(--glow);
+  }
+  .trait-card:hover::after { transform: scaleX(1); }
+  .trait-card:hover {
+    border-color: rgba(0,170,255,0.4);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 40px rgba(0,170,255,0.1);
+  }
+  .trait-icon { font-size: 2rem; margin-bottom: 0.8rem; display: block; }
+  .trait-label {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    color: var(--neon);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 4rem 2rem;
+    border-top: 1px solid rgba(0,170,255,0.1);
+  }
+
+  .footer-logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--neon), var(--neon3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 20px rgba(0,170,255,0.5));
+    margin-bottom: 1rem;
+  }
+  .footer-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    color: rgba(232,244,255,0.35);
+    text-transform: uppercase;
+  }
+
+  /* DIVIDER */
+  .neon-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--neon), var(--neon3), transparent);
+    margin: 0;
+    opacity: 0.3;
+    box-shadow: var(--glow);
+  }
+
+  /* FLOATING ELEMENTS */
+  .floating-label {
+    position: fixed;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    z-index: 100;
+  }
+  .nav-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(0,170,255,0.3);
+    border: 1px solid rgba(0,170,255,0.5);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .nav-dot.active, .nav-dot:hover {
+    background: var(--neon);
+    box-shadow: var(--glow);
+    transform: scale(1.5);
+  }
+
+  /* QUOTE */
+  .quote-block {
+    margin: 3rem 0;
+    padding: 2rem 3rem;
+    background: rgba(0,170,255,0.04);
+    border-left: 3px solid var(--neon);
+    border-radius: 0 12px 12px 0;
+    box-shadow: var(--glow), inset 0 0 30px rgba(0,170,255,0.03);
+  }
+  .quote-text {
+    font-size: 1.2rem;
+    font-style: italic;
+    color: rgba(232,244,255,0.85);
+    line-height: 1.8;
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 300;
+  }
+  .quote-author {
+    margin-top: 1rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    color: var(--neon);
+    text-transform: uppercase;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideIn {
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes pulse-glow {
+    0%, 100% { text-shadow: var(--glow); }
+    50% { text-shadow: var(--glow-strong); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  @keyframes scroll-pulse {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+  @keyframes shimmer {
+    from { left: -100%; }
+    to { left: 200%; }
+  }
+  @keyframes crown-bob {
+    0%, 100% { transform: translateY(0) rotate(-1deg); }
+    50%       { transform: translateY(-10px) rotate(1deg); }
+  }
+    0%, 90%, 100% { transform: translate(0); }
+    93% { transform: translate(-3px, 0); filter: hue-rotate(90deg); }
+    96% { transform: translate(3px, 0); }
+  }
+  @keyframes glitch2 {
+    0%, 88%, 100% { transform: translate(0); }
+    91% { transform: translate(3px, 0); filter: hue-rotate(-90deg); }
+    94% { transform: translate(-3px, 0); }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .about-grid, .games-grid { grid-template-columns: 1fr; }
+    .judo-grid { grid-template-columns: 1fr 1fr; }
+    .traits-grid { grid-template-columns: repeat(2, 1fr); }
+    .avatar-ring { width: 220px; height: 220px; }
+    .avatar-inner { width: 180px; height: 180px; font-size: 5rem; }
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1.5rem; }
+    .floating-label { display: none; }
+  }
+
+  /* ROYAL FRAME SECTION */
+  .royal-section {
+    background: linear-gradient(to bottom, transparent, rgba(180,140,0,0.04), transparent);
+  }
+
+  .royal-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    position: relative;
+  }
+
+  .royal-crown-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    font-size: 2.5rem;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .royal-crown-row span { filter: drop-shadow(0 0 12px gold); }
+
+  .gold-wealth-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .wealth-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    animation: float 2.5s ease-in-out infinite;
+  }
+  .wealth-item:nth-child(2) { animation-delay: 0.4s; }
+  .wealth-item:nth-child(3) { animation-delay: 0.8s; }
+  .wealth-item:nth-child(4) { animation-delay: 1.2s; }
+  .wealth-item:nth-child(5) { animation-delay: 1.6s; }
+  .wealth-item:nth-child(6) { animation-delay: 0.2s; }
+  .wealth-item:nth-child(7) { animation-delay: 0.6s; }
+
+  .wealth-emoji { font-size: 2.2rem; filter: drop-shadow(0 0 10px rgba(255,215,0,0.8)); }
+  .wealth-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 1px;
+    color: rgba(255,215,0,0.7);
+    text-transform: uppercase;
+  }
+
+  .royal-frame-outer {
+    position: relative;
+    display: inline-block;
+  }
+
+  /* ANIMATED SPARKLES AROUND FRAME */
+  .sparkle {
+    position: absolute;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    animation: sparkle-pulse 1.5s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes sparkle-pulse {
+    0%, 100% { transform: scale(0.5); opacity: 0.3; }
+    50% { transform: scale(1.5); opacity: 1; }
+  }
+
+  .royal-frame {
+    position: relative;
+    padding: 20px;
+    background:
+      linear-gradient(135deg, #ffe066 0%, #ffd700 20%, #b8860b 40%, #ffd700 60%, #ffe066 80%, #ffd700 100%);
+    border-radius: 4px;
+    box-shadow:
+      0 0 0 3px #b8860b,
+      0 0 0 6px #ffe066,
+      0 0 0 9px #b8860b,
+      0 0 40px rgba(255,215,0,0.6),
+      0 0 80px rgba(255,215,0,0.3),
+      0 0 120px rgba(255,215,0,0.15),
+      inset 0 0 20px rgba(255,255,255,0.2);
+    animation: royal-glow 3s ease-in-out infinite;
+  }
+
+  @keyframes royal-glow {
+    0%, 100% {
+      box-shadow:
+        0 0 0 3px #b8860b,
+        0 0 0 6px #ffe066,
+        0 0 0 9px #b8860b,
+        0 0 40px rgba(255,215,0,0.6),
+        0 0 80px rgba(255,215,0,0.3),
+        0 0 120px rgba(255,215,0,0.15),
+        inset 0 0 20px rgba(255,255,255,0.2);
+    }
+    50% {
+      box-shadow:
+        0 0 0 3px #ffd700,
+        0 0 0 6px #ffe066,
+        0 0 0 9px #ffd700,
+        0 0 60px rgba(255,215,0,0.9),
+        0 0 120px rgba(255,215,0,0.5),
+        0 0 180px rgba(255,215,0,0.25),
+        inset 0 0 30px rgba(255,255,255,0.3);
+    }
+  }
+
+  /* CORNER ORNAMENTS */
+  .frame-corner {
+    position: absolute;
+    width: 50px; height: 50px;
+    pointer-events: none;
+  }
+  .frame-corner svg { width: 100%; height: 100%; }
+  .frame-corner.tl { top: -5px; left: -5px; }
+  .frame-corner.tr { top: -5px; right: -5px; transform: scaleX(-1); }
+  .frame-corner.bl { bottom: -5px; left: -5px; transform: scaleY(-1); }
+  .frame-corner.br { bottom: -5px; right: -5px; transform: scale(-1, -1); }
+
+  /* DIAMOND STUDS ON FRAME */
+  .frame-diamond {
+    position: absolute;
+    width: 16px; height: 16px;
+    background: linear-gradient(135deg, #a8edff, #00cfff, #0099dd, #00cfff);
+    transform: rotate(45deg);
+    box-shadow: 0 0 12px rgba(0,200,255,0.9), 0 0 25px rgba(0,150,255,0.6), inset 0 0 8px rgba(255,255,255,0.6);
+    animation: diamond-shimmer 2s ease-in-out infinite;
+  }
+  @keyframes diamond-shimmer {
+    0%, 100% { box-shadow: 0 0 12px rgba(0,200,255,0.9), 0 0 25px rgba(0,150,255,0.6), inset 0 0 8px rgba(255,255,255,0.6); }
+    50% { box-shadow: 0 0 20px rgba(0,220,255,1), 0 0 40px rgba(0,170,255,0.8), inset 0 0 12px rgba(255,255,255,0.9); }
+  }
+
+  /* PHOTO INSIDE FRAME */
+  .royal-photo {
+    display: block;
+    width: 320px;
+    height: 380px;
+    object-fit: cover;
+    object-position: center top;
+    border-radius: 2px;
+    border: 4px solid rgba(255,215,0,0.5);
+    position: relative;
+    z-index: 1;
+    filter: contrast(1.05) brightness(1.05);
+  }
+
+  /* NAMEPLATE */
+  .royal-nameplate {
+    margin-top: 0;
+    background: linear-gradient(135deg, #ffe066, #ffd700, #b8860b, #ffd700, #ffe066);
+    padding: 0.6rem 2.5rem;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(255,215,0,0.5);
+    border-top: 2px solid #b8860b;
+  }
+  .nameplate-text {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 4px;
+    color: #3d2800;
+    text-transform: uppercase;
+    font-weight: 900;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+  }
+
+  .royal-title-area {
+    text-align: center;
+    max-width: 500px;
+  }
+  .royal-title-area h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #ffe066, #ffd700, #ffaa00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 20px rgba(255,215,0,0.5));
+    margin-bottom: 0.8rem;
+  }
+  .royal-title-area p {
+    color: rgba(232,244,255,0.65);
+    line-height: 1.8;
+    font-size: 0.95rem;
+    font-style: italic;
+  }
+
+  .gold-bars {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+  .gold-bar {
+    width: 60px; height: 30px;
+    background: linear-gradient(135deg, #ffe066, #ffd700, #b8860b, #ffd700);
+    border-radius: 4px;
+    box-shadow: 0 0 15px rgba(255,215,0,0.6), 0 2px 4px rgba(0,0,0,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.55rem;
+    font-family: 'Space Mono', monospace;
+    color: #3d2800;
+    font-weight: 700;
+    letter-spacing: 1px;
+    animation: float 3s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+  }
+  .gold-bar::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: shimmer 2.5s ease infinite;
+  }
+  .gold-bar:nth-child(2) { animation-delay: 0.3s; }
+  .gold-bar:nth-child(3) { animation-delay: 0.6s; }
+  .gold-bar:nth-child(4) { animation-delay: 0.9s; }
+
+</style>
+</head>
+<body>
+
+<!-- CUSTOM CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-trail" id="cursorTrail"></div>
+
+<!-- SOUNDWAVE BACKGROUND -->
+<canvas id="soundwave-canvas"></canvas>
+<canvas id="particle-canvas"></canvas>
+
+<!-- NAV DOTS -->
+<div class="floating-label">
+  <div class="nav-dot active" onclick="scrollToSection('hero')"></div>
+  <div class="nav-dot" onclick="scrollToSection('about')"></div>
+  <div class="nav-dot" onclick="scrollToSection('judo')"></div>
+  <div class="nav-dot" onclick="scrollToSection('gaming')"></div>
+  <div class="nav-dot" onclick="scrollToSection('life')"></div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">E.E</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#judo">Judo</a></li>
+    <li><a href="#gaming">Gaming</a></li>
+    <li><a href="#life">Life</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-content">
+    <div class="hero-badge">★ Judoka & Gamer ★</div>
+    <h1 class="hero-name glitch" data-text="EREN ERARSLAN">EREN ERARSLAN</h1>
+    <p class="hero-subtitle">15 Years Young · Blue Belt Soul · Roblox Legend</p>
+    <div class="hero-flags">
+      <div class="flag-pill">🇹🇷 Turkish Roots</div>
+      <div class="flag-pill">🇳🇱 Dutch Life</div>
+      <div class="flag-pill">🥋 Judo Fighter</div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span class="scroll-text">Scroll Down</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<div class="neon-divider"></div>
+<section id="about">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div class="about-text">
+        <p class="section-label">// Who is he</p>
+        <h2 class="section-title">A Warrior Born Between Two Worlds</h2>
+        <p>Eren Erarslan is a 15-year-old who carries the fire of Turkey and the spirit of the Netherlands in equal measure. Born with Turkish heritage and now living in the Netherlands, Eren has built a life that bridges two cultures — learning, fighting, and gaming his way through every day with relentless energy.</p>
+        <p>Whether he's on the tatami throwing opponents with crisp technique, or grinding late nights in Roblox chasing the next level, Eren approaches everything with the same fierce dedication. Blue is more than his favorite color — it's the color of his belt, his glow, his identity.</p>
+        <p>At just 15 years old, he's already a dedicated practitioner of judo, a competitive spirit, and a kid who knows exactly who he is. Friends know him as intense, funny, loyal, and completely obsessed with both judo and Roblox — sometimes in that order, sometimes not.</p>
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-value">15</div>
+            <div class="stat-label">Years Old</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">🥋</div>
+            <div class="stat-label">Blue Belt</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">2</div>
+            <div class="stat-label">Countries</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">∞</div>
+            <div class="stat-label">Gaming Hours</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="avatar-container">
+        <div class="avatar-ring">
+          <div class="avatar-inner">🥋</div>
+          <div class="orbit-dot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JUDO -->
+<div class="neon-divider"></div>
+<section id="judo" class="judo-section">
+  <div class="section-inner">
+    <p class="section-label">// The Sport</p>
+    <h2 class="section-title">The Art of the Gentle Way</h2>
+    <p style="color: rgba(232,244,255,0.7); max-width: 650px; line-height: 1.9; font-size:0.98rem;">Judo is not just a sport for Eren — it's a philosophy, a discipline, and a second home. Stepping onto the tatami, he enters a world where focus, strength, and technique converge. Every training session is a battle, and every battle teaches him something new about himself.</p>
+
+    <div class="quote-block">
+      <p class="quote-text">"Judo taught me that falling is not failure — it's part of getting back up stronger. Every throw I learn, every throw I take, makes me better."</p>
+      <p class="quote-author">— Eren Erarslan, Judoka</p>
+    </div>
+
+    <div class="judo-grid">
+      <div class="judo-card">
+        <span class="judo-icon">🎯</span>
+        <h3>Precision & Technique</h3>
+        <p>Judo demands perfect timing and technique. Eren has spent years honing his throws, learning that a well-timed move beats raw strength every time. His favorite techniques include dynamic hip throws and sweeps.</p>
+      </div>
+      <div class="judo-card">
+        <span class="judo-icon">🧠</span>
+        <h3>Mental Discipline</h3>
+        <p>The discipline judo instills carries beyond the mat. Eren brings the same calm focus he uses in competition to his schoolwork, his gaming, and his daily life. Judo has shaped how he thinks under pressure.</p>
+      </div>
+      <div class="judo-card">
+        <span class="judo-icon">💪</span>
+        <h3>Physical Strength</h3>
+        <p>Hours of training every week have built Eren into a physically powerful young athlete. Grip strength, explosive legs, core stability — judo demands it all, and Eren delivers with every session on the mat.</p>
+      </div>
+      <div class="judo-card">
+        <span class="judo-icon">🏆</span>
+        <h3>Competitive Drive</h3>
+        <p>Competitions are where Eren shines. The adrenaline of facing an opponent, the strategy of reading their movement, the burst of energy in a throw — this is where his training becomes something electric.</p>
+      </div>
+      <div class="judo-card">
+        <span class="judo-icon">🤝</span>
+        <h3>Dojo Brotherhood</h3>
+        <p>Judo builds bonds like no other sport. The teammates you train with become your closest allies. Eren's dojo family is a crucial part of his life — they push each other, laugh together, and grow together.</p>
+      </div>
+      <div class="judo-card">
+        <span class="judo-icon">🌊</span>
+        <h3>The Blue Belt Path</h3>
+        <p>Blue is the color of Eren's favorite things — and fittingly, he wears a blue belt with pride. Each color represents progression, and the blue belt marks a judoka who has built real, battle-tested skill.</p>
+      </div>
+    </div>
+
+    <div class="belt-container">
+      <div class="belt-title">// Belt Journey</div>
+      <div class="belt-visual">
+        <span style="font-family:'Space Mono',monospace;font-size:0.7rem;color:rgba(232,244,255,0.5);white-space:nowrap">WHITE</span>
+        <div class="belt-strip" style="background:#e0e0e0;height:30px;opacity:0.5;flex:0.5"></div>
+        <div class="belt-strip" style="background:linear-gradient(135deg,#c8a000,#f0c800);box-shadow:0 0 15px rgba(200,160,0,0.4);flex:0.8;height:30px;opacity:0.7"></div>
+        <div class="belt-strip" style="background:linear-gradient(135deg,#ff6600,#ff8800);box-shadow:0 0 15px rgba(255,100,0,0.4);flex:0.8;height:30px;opacity:0.7"></div>
+        <div class="belt-strip" style="background:linear-gradient(135deg,#00aa44,#00cc55);box-shadow:0 0 15px rgba(0,170,68,0.4);flex:0.8;height:30px;opacity:0.8"></div>
+        <div class="belt-strip belt-blue" style="flex:1.5;height:40px;border:1px solid var(--neon)"></div>
+        <div class="belt-strip" style="background:linear-gradient(135deg,#333,#555);flex:0.5;height:30px;opacity:0.3"></div>
+        <div class="belt-rank">⭐ BLUE BELT — CURRENT ⭐</div>
+      </div>
+      <p style="margin-top:1.5rem;font-size:0.85rem;color:rgba(232,244,255,0.55);font-family:'Space Mono',monospace;line-height:1.8;">
+        The blue belt signifies an athlete who has moved beyond the basics and developed real fighting ability. It takes years of dedicated training to reach this level — and Eren wears it with earned pride.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ROYAL PHOTO -->
+<div class="neon-divider" style="background:linear-gradient(90deg,transparent,#ffd700,#ffaa00,transparent);opacity:0.4"></div>
+<section class="royal-section">
+  <div class="section-inner" style="padding:5rem 2rem">
+    <div class="royal-stage">
+
+      <!-- CROWN ROW -->
+      <div class="royal-crown-row">
+        <span>💰</span><span>💎</span><span>👑</span><span>EREN THE CHAMPION</span><span>👑</span><span>💎</span><span>💰</span>
+      </div>
+
+      <!-- ROYAL TITLE -->
+      <div class="royal-title-area">
+        <h2>The Champion's Portrait</h2>
+        <p>Captured in glory — Eren Erarslan, medal in hand, wearing the white judogi like a king wears his robes. This moment is who he is: a winner, a fighter, a champion born.</p>
+      </div>
+
+      <!-- WEALTH LEFT + FRAME + WEALTH RIGHT -->
+      <div style="display:flex;align-items:center;gap:3rem;flex-wrap:wrap;justify-content:center">
+
+        <!-- LEFT WEALTH -->
+        <div style="display:flex;flex-direction:column;gap:1.2rem;align-items:center">
+          <div class="wealth-item"><span class="wealth-emoji">💰</span><span class="wealth-label">Gold</span></div>
+          <div class="wealth-item"><span class="wealth-emoji">🏆</span><span class="wealth-label">Trophy</span></div>
+          <div class="wealth-item"><span class="wealth-emoji">💵</span><span class="wealth-label">Money</span></div>
+          <div class="wealth-item"><span class="wealth-emoji">🥇</span><span class="wealth-label">Medal</span></div>
+          <div class="wealth-item"><span class="wealth-emoji">💍</span><span class="wealth-label">Jewels</span></div>
+        </div>
+
+        <!-- THE ROYAL FRAME -->
+        <div class="royal-frame-outer" style="display:flex;flex-direction:column;align-items:center">
+          <!-- BIG CROWN ON TOP -->
+          <div style="margin-bottom:-18px;z-index:20;position:relative;animation:crown-bob 2s ease-in-out infinite;filter:drop-shadow(0 0 18px #ffd700) drop-shadow(0 0 40px #ffaa0099)">
+            <svg width="200" height="130" viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="cg1" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%"   stop-color="#fff7a0"/>
+                  <stop offset="30%"  stop-color="#ffd700"/>
+                  <stop offset="60%"  stop-color="#b8860b"/>
+                  <stop offset="100%" stop-color="#ffd700"/>
+                </linearGradient>
+                <linearGradient id="cg2" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%"   stop-color="#ffe066"/>
+                  <stop offset="100%" stop-color="#b8860b"/>
+                </linearGradient>
+                <radialGradient id="gem-r" cx="40%" cy="35%">
+                  <stop offset="0%"   stop-color="#ffffff"/>
+                  <stop offset="40%"  stop-color="#a8edff"/>
+                  <stop offset="100%" stop-color="#0088cc"/>
+                </radialGradient>
+                <radialGradient id="gem-g" cx="40%" cy="35%">
+                  <stop offset="0%"   stop-color="#ffffff"/>
+                  <stop offset="40%"  stop-color="#a0ffb0"/>
+                  <stop offset="100%" stop-color="#00aa44"/>
+                </radialGradient>
+                <radialGradient id="gem-p" cx="40%" cy="35%">
+                  <stop offset="0%"   stop-color="#ffffff"/>
+                  <stop offset="40%"  stop-color="#ddaaff"/>
+                  <stop offset="100%" stop-color="#8800cc"/>
+                </radialGradient>
+                <filter id="glow-filter">
+                  <feGaussianBlur stdDeviation="3" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              </defs>
+
+              <!-- CROWN BAND / BASE -->
+              <rect x="18" y="82" width="164" height="32" rx="4" fill="url(#cg2)" stroke="#b8860b" stroke-width="1.5"/>
+              <!-- Band shine -->
+              <rect x="18" y="82" width="164" height="10" rx="4" fill="rgba(255,255,255,0.18)"/>
+              <!-- Band engraving lines -->
+              <line x1="18" y1="98" x2="182" y2="98" stroke="#b8860b" stroke-width="1" opacity="0.5"/>
+
+              <!-- CROWN BODY (main shape) -->
+              <path d="M18,84 L18,30 L60,65 L100,10 L140,65 L182,30 L182,84 Z"
+                    fill="url(#cg1)" stroke="#b8860b" stroke-width="2" stroke-linejoin="round"/>
+              <!-- Crown body shine overlay -->
+              <path d="M18,84 L18,30 L60,65 L100,10 L140,65 L182,30 L182,50 L140,80 L100,45 L60,80 L18,60 Z"
+                    fill="rgba(255,255,255,0.12)" stroke="none"/>
+
+              <!-- LEFT POINT decoration -->
+              <circle cx="18" cy="30" r="8" fill="url(#gem-p)" stroke="#b8860b" stroke-width="1.5" filter="url(#glow-filter)"/>
+              <circle cx="18" cy="30" r="4" fill="rgba(255,255,255,0.5)"/>
+
+              <!-- MIDDLE PEAK decoration -->
+              <circle cx="100" cy="10" r="11" fill="url(#gem-r)" stroke="#b8860b" stroke-width="2" filter="url(#glow-filter)"/>
+              <circle cx="97"  cy="7"  r="4"  fill="rgba(255,255,255,0.6)"/>
+              <!-- Extra bling around center gem -->
+              <circle cx="100" cy="10" r="14" fill="none" stroke="#ffd700" stroke-width="1" opacity="0.6" stroke-dasharray="3 3"/>
+
+              <!-- RIGHT POINT decoration -->
+              <circle cx="182" cy="30" r="8" fill="url(#gem-g)" stroke="#b8860b" stroke-width="1.5" filter="url(#glow-filter)"/>
+              <circle cx="182" cy="30" r="4" fill="rgba(255,255,255,0.5)"/>
+
+              <!-- DIAMONDS on band -->
+              <polygon points="50,98 56,88 62,98 56,108" fill="url(#gem-r)" stroke="#0088cc" stroke-width="1"/>
+              <polygon points="93,98 100,86 107,98 100,110" fill="url(#gem-p)" stroke="#8800cc" stroke-width="1"/>
+              <polygon points="138,98 144,88 150,98 144,108" fill="url(#gem-g)" stroke="#00aa44" stroke-width="1"/>
+
+              <!-- Small sparkle stars -->
+              <text x="30"  y="75" font-size="10" fill="#fff7a0" opacity="0.8">✦</text>
+              <text x="160" y="75" font-size="10" fill="#fff7a0" opacity="0.8">✦</text>
+              <text x="94"  y="60" font-size="8"  fill="#ffe066" opacity="0.6">✦</text>
+            </svg>
+          </div>
+          <!-- SPARKLES -->
+          <div class="sparkle" style="top:-15px;left:30%;background:#ffd700;box-shadow:0 0 8px gold;animation-delay:0s"></div>
+          <div class="sparkle" style="top:10%;right:-15px;background:#00cfff;box-shadow:0 0 8px cyan;animation-delay:0.3s"></div>
+          <div class="sparkle" style="bottom:20%;right:-20px;background:#ffd700;box-shadow:0 0 8px gold;animation-delay:0.7s"></div>
+          <div class="sparkle" style="bottom:-15px;left:40%;background:#fff;box-shadow:0 0 8px white;animation-delay:1s"></div>
+          <div class="sparkle" style="top:40%;left:-20px;background:#00cfff;box-shadow:0 0 8px cyan;animation-delay:0.5s"></div>
+          <div class="sparkle" style="top:-10px;right:25%;background:#fff;box-shadow:0 0 8px white;animation-delay:1.2s"></div>
+
+          <div class="royal-frame">
+            
+    <!-- DIAMOND STUDS -->
+    <div class="frame-diamond" style="top:-8px;left:50%;transform:translateX(-50%) rotate(45deg)"></div>
+    <div class="frame-diamond" style="bottom:-8px;left:50%;transform:translateX(-50%) rotate(45deg);animation-delay:0.3s"></div>
+    <div class="frame-diamond" style="left:-8px;top:50%;transform:translateY(-50%) rotate(45deg);animation-delay:0.6s"></div>
+    <div class="frame-diamond" style="right:-8px;top:50%;transform:translateY(-50%) rotate(45deg);animation-delay:0.9s"></div>
+    <div class="frame-diamond" style="top:-8px;left:25%;transform:translateX(-50%) rotate(45deg);animation-delay:0.2s;width:12px;height:12px"></div>
+    <div class="frame-diamond" style="top:-8px;left:75%;transform:translateX(-50%) rotate(45deg);animation-delay:0.5s;width:12px;height:12px"></div>
+    <div class="frame-diamond" style="bottom:-8px;left:25%;transform:translateX(-50%) rotate(45deg);animation-delay:0.7s;width:12px;height:12px"></div>
+    <div class="frame-diamond" style="bottom:-8px;left:75%;transform:translateX(-50%) rotate(45deg);animation-delay:1s;width:12px;height:12px"></div>
+    <div class="frame-diamond" style="top:25%;right:-8px;transform:translateY(-50%) rotate(45deg);animation-delay:0.4s;width:12px;height:12px"></div>
+    <div class="frame-diamond" style="top:75%;right:-8px;transform:translateY(-50%) rotate(45deg);animation-delay:0.8s;width:12px;height:12px"></div>
+    <div class="frame-diamond" style="top:25%;left:-8px;transform:translateY(-50%) rotate(45deg);animation-delay:0.15s;width:12px;height:12px"></div>
+    <div class="frame-diamond" style="top:75%;left:-8px;transform:translateY(-50%) rotate(45deg);animation-delay:0.65s;width:12px;height:12px"></div>
+
+            <!-- CORNER ORNAMENTS -->
+            <div class="frame-corner tl"><svg viewBox="0 0 50 50"><path d="M5,5 L20,5 L20,8 L8,8 L8,20 L5,20 Z" fill="#b8860b"/><path d="M5,5 L15,5 L5,15 Z" fill="#ffd700"/><circle cx="18" cy="18" r="5" fill="none" stroke="#ffd700" stroke-width="2"/><circle cx="18" cy="18" r="2" fill="#ffe066"/></svg></div>
+            <div class="frame-corner tr"><svg viewBox="0 0 50 50"><path d="M5,5 L20,5 L20,8 L8,8 L8,20 L5,20 Z" fill="#b8860b"/><path d="M5,5 L15,5 L5,15 Z" fill="#ffd700"/><circle cx="18" cy="18" r="5" fill="none" stroke="#ffd700" stroke-width="2"/><circle cx="18" cy="18" r="2" fill="#ffe066"/></svg></div>
+            <div class="frame-corner bl"><svg viewBox="0 0 50 50"><path d="M5,5 L20,5 L20,8 L8,8 L8,20 L5,20 Z" fill="#b8860b"/><path d="M5,5 L15,5 L5,15 Z" fill="#ffd700"/><circle cx="18" cy="18" r="5" fill="none" stroke="#ffd700" stroke-width="2"/><circle cx="18" cy="18" r="2" fill="#ffe066"/></svg></div>
+            <div class="frame-corner br"><svg viewBox="0 0 50 50"><path d="M5,5 L20,5 L20,8 L8,8 L8,20 L5,20 Z" fill="#b8860b"/><path d="M5,5 L15,5 L5,15 Z" fill="#ffd700"/><circle cx="18" cy="18" r="5" fill="none" stroke="#ffd700" stroke-width="2"/><circle cx="18" cy="18" r="2" fill="#ffe066"/></svg></div>
+
+            <img class="royal-photo" src="data:image/jpeg;base64,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" alt="Eren Erarslan — Champion Judoka">
+            <div class="royal-nameplate">
+              <div class="nameplate-text">★ Eren Erarslan ★ Champion ★</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT WEALTH -->
+        <div style="display:flex;flex-direction:column;gap:1.2rem;align-items:center">
+          <div class="wealth-item"><span class="wealth-emoji">💎</span><span class="wealth-label">Diamond</span></div>
+          <div class="wealth-item"><span class="wealth-emoji">👑</span><span class="wealth-label">Crown</span></div>
+          <div class="wealth-item"><span class="wealth-emoji">💴</span><span class="wealth-label">Wealth</span></div>
+          <div class="wealth-item"><span class="wealth-emoji">🏅</span><span class="wealth-label">Glory</span></div>
+          <div class="wealth-item"><span class="wealth-emoji">💸</span><span class="wealth-label">Riches</span></div>
+        </div>
+      </div>
+
+      <!-- GOLD BARS -->
+      <div class="gold-bars">
+        <div class="gold-bar">GOLD</div>
+        <div class="gold-bar">GOLD</div>
+        <div class="gold-bar">GOLD</div>
+        <div class="gold-bar">GOLD</div>
+        <div class="gold-bar">GOLD</div>
+      </div>
+
+      <!-- BOTTOM EMOJI ROW -->
+      <div class="gold-wealth-row" style="font-size:2rem;margin-top:0.5rem">
+        <span style="animation:float 2s infinite;display:inline-block;filter:drop-shadow(0 0 8px gold)">💰</span>
+        <span style="animation:float 2s 0.2s infinite;display:inline-block;filter:drop-shadow(0 0 8px gold)">💵</span>
+        <span style="animation:float 2s 0.4s infinite;display:inline-block;filter:drop-shadow(0 0 8px gold)">💎</span>
+        <span style="animation:float 2s 0.6s infinite;display:inline-block;filter:drop-shadow(0 0 gold)">🥇</span>
+        <span style="animation:float 2s 0.8s infinite;display:inline-block;filter:drop-shadow(0 0 8px gold)">💎</span>
+        <span style="animation:float 2s 1s infinite;display:inline-block;filter:drop-shadow(0 0 8px gold)">💵</span>
+        <span style="animation:float 2s 1.2s infinite;display:inline-block;filter:drop-shadow(0 0 8px gold)">💰</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+<div class="neon-divider" style="background:linear-gradient(90deg,transparent,#ffd700,#ffaa00,transparent);opacity:0.4"></div>
+
+<!-- GAMING -->
+<div class="neon-divider"></div>
+<section id="gaming" class="gaming-section">
+  <div class="section-inner">
+    <p class="section-label">// The Other Battlefield</p>
+    <h2 class="section-title">Roblox Runs Through His Veins</h2>
+
+    <div class="gaming-hero">
+      <span class="gaming-emoji">🎮</span>
+      <h3>Legendary Roblox Player</h3>
+      <p>When Eren is not throwing people on the tatami, he's dominating in Roblox. This isn't just casual gaming — Eren has poured hundreds of hours into mastering his favorite titles, learning every mechanic, every meta, every shortcut. Roblox is his second home, and he navigates it like a veteran.</p>
+    </div>
+
+    <div class="games-grid">
+      <!-- BLOX FRUITS -->
+      <div class="game-card">
+        <div class="game-card-bg">🍎</div>
+        <span class="game-tag">🏆 Favorite #1</span>
+        <span class="game-icon">⚓</span>
+        <h3>Blox Fruits</h3>
+        <p>Blox Fruits is Eren's obsession. Inspired by One Piece, this massive Roblox RPG lets players sail across vast seas, hunt powerful Devil Fruits, and battle their way to becoming the strongest. Eren has explored every sea, defeated every boss, and chased every fruit with the same intensity he brings to judo.</p>
+        <p style="margin-top:0.8rem">He knows every fruit tier, every combat technique, every grinding spot. Ask him anything about Blox Fruits and he'll give you a 10-minute breakdown without missing a beat. His dream is to master the most powerful fruits and become a true sea king.</p>
+        <div class="game-stats">
+          <div class="game-stat-item">
+            <span class="game-stat-val">💎</span>
+            <span class="game-stat-key">Dedicated Grinder</span>
+          </div>
+          <div class="game-stat-item">
+            <span class="game-stat-val">⚔️</span>
+            <span class="game-stat-key">PVP Warrior</span>
+          </div>
+          <div class="game-stat-item">
+            <span class="game-stat-val">🍋</span>
+            <span class="game-stat-key">Fruit Hunter</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- AOT REVOLUTION -->
+      <div class="game-card">
+        <div class="game-card-bg">⚡</div>
+        <span class="game-tag">🏆 Favorite #2</span>
+        <span class="game-icon">🗡️</span>
+        <h3>Attack on Titan Revolution</h3>
+        <p>Attack on Titan Revolution speaks directly to Eren's soul. The brutal, high-stakes world of AoT mirrors the intensity he feels on the judo mat — every battle matters, every decision counts, and weakness is not an option. He loves mastering the ODM gear mechanics and taking on Titans with precise, fearless strikes.</p>
+        <p style="margin-top:0.8rem">Eren identifies deeply with the themes of strength, freedom, and fighting against overwhelming odds. In the game, he's always pushing toward the hardest content, refusing to be anything less than exceptional. The Survey Corps would be proud.</p>
+        <div class="game-stats">
+          <div class="game-stat-item">
+            <span class="game-stat-val">🏅</span>
+            <span class="game-stat-key">Elite Soldier</span>
+          </div>
+          <div class="game-stat-item">
+            <span class="game-stat-val">🎯</span>
+            <span class="game-stat-key">Precision Strikes</span>
+          </div>
+          <div class="game-stat-item">
+            <span class="game-stat-val">🌟</span>
+            <span class="game-stat-key">Top Tier</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="belt-container" style="margin-top:2rem">
+      <div class="belt-title">// Why Roblox?</div>
+      <p style="color:rgba(232,244,255,0.7);line-height:1.9;font-size:0.95rem;margin-bottom:1rem">
+        Roblox offers something special — a universe of endless worlds, communities, and challenges. For Eren, it's not just entertainment. It's where he connects with friends, tests his strategic thinking, and unwinds from the physical demands of judo training. The creativity of the Roblox platform fascinates him, and the competitive elements scratch the same competitive itch as sport.
+      </p>
+      <p style="color:rgba(232,244,255,0.7);line-height:1.9;font-size:0.95rem">
+        There's a certain poetry in Eren playing a game called <strong style="color:var(--neon)">Blox Fruits</strong> — hunting powerful fruits across seas, growing stronger — while he does the exact same thing in real life through judo: getting on the mat, taking losses, and becoming stronger. Two worlds, one mindset.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- LIFE STORY -->
+<div class="neon-divider"></div>
+<section id="life">
+  <div class="section-inner">
+    <p class="section-label">// The Journey</p>
+    <h2 class="section-title">From Turkey to the Netherlands</h2>
+    <p style="color:rgba(232,244,255,0.7);max-width:650px;line-height:1.9;margin-bottom:2rem;font-size:0.98rem">Eren's story is one of roots and growth — of carrying a heritage proudly while building something new. His Turkish background gives him warmth, family values, and a fierce competitive culture. His life in the Netherlands gives him opportunity, a world-class judo environment, and a future full of possibility.</p>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-year">Turkish Heritage</div>
+        <div class="timeline-title">Roots Across the Aegean</div>
+        <div class="timeline-text">Eren's story begins in Turkey — a country with a rich culture of sport, family, and pride. Turkish values of hospitality, toughness, and loyalty were instilled in him from a young age. These roots never leave him, no matter where in the world he stands.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-year">The Netherlands</div>
+        <div class="timeline-title">A New Home, A New Stage</div>
+        <div class="timeline-text">Moving to the Netherlands opened up a world of opportunity. The Dutch judo scene is internationally recognized — it's produced Olympic champions and world-class athletes. For a young judoka like Eren, there's no better place to grow and compete. He embraced the Netherlands fully while keeping his Turkish heart.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-year">The First Throw</div>
+        <div class="timeline-title">Discovering Judo</div>
+        <div class="timeline-text">The moment Eren stepped onto a tatami for the first time, something clicked. The combination of physical challenge, strategy, and the dojo's unique culture pulled him in completely. He threw himself into training — literally — and never looked back. Judo became his passion, his discipline, his identity.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-year">The Discovery</div>
+        <div class="timeline-title">Roblox Enters the Chat</div>
+        <div class="timeline-text">Between training sessions, Eren discovered Roblox — and quickly fell down the rabbit hole. Blox Fruits and Attack on Titan Revolution became his go-to worlds. Gaming became the perfect balance to the physical intensity of judo: a mental space to compete, strategize, and have fun with friends.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-year">Today — Age 15</div>
+        <div class="timeline-title">The Story Continues</div>
+        <div class="timeline-text">At 15, Eren is in full bloom — training hard, gaming harder, and figuring out who he wants to be. He dreams of competing at higher judo levels, of reaching the top ranks in his favorite games, and of honoring both the Turkish spirit that shaped him and the Dutch future that awaits him.</div>
+      </div>
+    </div>
+
+    <!-- PERSONALITY -->
+    <p class="section-label" style="margin-top:4rem">// Who He Really Is</p>
+    <h3 style="font-family:'Orbitron',sans-serif;font-size:1.8rem;margin-bottom:1rem;background:linear-gradient(135deg,#fff,var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Personality & Traits</h3>
+
+    <div class="traits-grid">
+      <div class="trait-card">
+        <span class="trait-icon">🔥</span>
+        <div class="trait-label">Competitive</div>
+      </div>
+      <div class="trait-card">
+        <span class="trait-icon">😄</span>
+        <div class="trait-label">Funny</div>
+      </div>
+      <div class="trait-card">
+        <span class="trait-icon">💙</span>
+        <div class="trait-label">Loyal</div>
+      </div>
+      <div class="trait-card">
+        <span class="trait-icon">🎮</span>
+        <div class="trait-label">Gamer</div>
+      </div>
+      <div class="trait-card">
+        <span class="trait-icon">🎌</span>
+        <div class="trait-label">Cultural Pride</div>
+      </div>
+      <div class="trait-card">
+        <span class="trait-icon">🧠</span>
+        <div class="trait-label">Strategic</div>
+      </div>
+      <div class="trait-card">
+        <span class="trait-icon">⚡</span>
+        <div class="trait-label">Energetic</div>
+      </div>
+      <div class="trait-card">
+        <span class="trait-icon">🌊</span>
+        <div class="trait-label">Determined</div>
+      </div>
+    </div>
+
+    <div class="quote-block" style="margin-top:3rem">
+      <p class="quote-text">"Being Turkish in the Netherlands means I carry two strengths. On the mat, I fight with everything I have. Off the mat, I play like there's no tomorrow. Blue is my color. Always."</p>
+      <p class="quote-author">— Eren Erarslan</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div class="neon-divider"></div>
+<footer>
+  <div class="footer-logo">EREN ERARSLAN</div>
+  <p class="footer-sub">Judoka · Gamer · Dutch-Turkish Legend · Age 15</p>
+  <p style="margin-top:2rem;font-family:'Space Mono',monospace;font-size:0.6rem;color:rgba(232,244,255,0.2);letter-spacing:2px">🥋 JUDO IS LIFE &nbsp;|&nbsp; 🎮 ROBLOX IS LOVE &nbsp;|&nbsp; 💙 BLUE IS FOREVER</p>
+</footer>
+
+<script>
+// CUSTOM CURSOR
+const cursor = document.getElementById('cursor');
+const trail = document.getElementById('cursorTrail');
+let mx = 0, my = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx - 6 + 'px';
+  cursor.style.top = my - 6 + 'px';
+});
+setInterval(() => {
+  trail.style.left = mx - 20 + 'px';
+  trail.style.top = my - 20 + 'px';
+}, 80);
+
+// SOUNDWAVE CANVAS
+const swCanvas = document.getElementById('soundwave-canvas');
+const swCtx = swCanvas.getContext('2d');
+let W, H;
+function resize() {
+  W = swCanvas.width = window.innerWidth;
+  H = swCanvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+const LINES = 12;
+const waves = Array.from({length: LINES}, (_, i) => ({
+  amp: 30 + Math.random() * 80,
+  freq: 0.003 + Math.random() * 0.008,
+  speed: 0.003 + Math.random() * 0.007,
+  offset: Math.random() * Math.PI * 2,
+  y: H * (0.15 + (i / LINES) * 0.7),
+  alpha: 0.08 + Math.random() * 0.18,
+  hue: 200 + Math.random() * 40
+}));
+
+let t = 0;
+function drawWave() {
+  swCtx.clearRect(0, 0, W, H);
+  swCtx.fillStyle = '#020a14';
+  swCtx.fillRect(0, 0, W, H);
+
+  waves.forEach(w => {
+    w.y = H * (0.15 + waves.indexOf(w) / LINES * 0.7);
+    swCtx.beginPath();
+    swCtx.moveTo(0, w.y);
+    for (let x = 0; x <= W; x += 3) {
+      const y = w.y + Math.sin(x * w.freq + t * w.speed * 60 + w.offset) * w.amp
+                     + Math.sin(x * w.freq * 1.7 + t * w.speed * 40) * (w.amp * 0.4);
+      swCtx.lineTo(x, y);
+    }
+    const grad = swCtx.createLinearGradient(0, 0, W, 0);
+    grad.addColorStop(0, `hsla(${w.hue},100%,60%,0)`);
+    grad.addColorStop(0.3, `hsla(${w.hue},100%,60%,${w.alpha})`);
+    grad.addColorStop(0.7, `hsla(${w.hue + 20},100%,70%,${w.alpha * 1.5})`);
+    grad.addColorStop(1, `hsla(${w.hue},100%,60%,0)`);
+    swCtx.strokeStyle = grad;
+    swCtx.lineWidth = 1.5;
+    swCtx.shadowBlur = 15;
+    swCtx.shadowColor = `hsla(${w.hue},100%,60%,0.5)`;
+    swCtx.stroke();
+  });
+
+  t += 0.016;
+  requestAnimationFrame(drawWave);
+}
+drawWave();
+
+// PARTICLE CANVAS
+const pCanvas = document.getElementById('particle-canvas');
+const pCtx = pCanvas.getContext('2d');
+pCanvas.width = window.innerWidth;
+pCanvas.height = window.innerHeight;
+window.addEventListener('resize', () => { pCanvas.width = window.innerWidth; pCanvas.height = window.innerHeight; });
+
+const particles = Array.from({length: 80}, () => ({
+  x: Math.random() * window.innerWidth,
+  y: Math.random() * window.innerHeight,
+  r: 0.5 + Math.random() * 2,
+  vx: (Math.random() - 0.5) * 0.3,
+  vy: (Math.random() - 0.5) * 0.3,
+  alpha: 0.1 + Math.random() * 0.5
+}));
+
+function drawParticles() {
+  pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+  particles.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0) p.x = pCanvas.width;
+    if (p.x > pCanvas.width) p.x = 0;
+    if (p.y < 0) p.y = pCanvas.height;
+    if (p.y > pCanvas.height) p.y = 0;
+    pCtx.beginPath();
+    pCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    pCtx.fillStyle = `rgba(0,170,255,${p.alpha})`;
+    pCtx.shadowBlur = 10;
+    pCtx.shadowColor = '#00aaff';
+    pCtx.fill();
+  });
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// NAV DOTS
+function scrollToSection(id) {
+  document.getElementById(id)?.scrollIntoView({behavior:'smooth'});
+}
+
+// INTERSECTION OBSERVER for nav dots
+const sections = ['hero','about','judo','gaming','life'];
+const dots = document.querySelectorAll('.nav-dot');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const i = sections.indexOf(e.target.id);
+      dots.forEach((d,j) => d.classList.toggle('active', i === j));
+    }
+  });
+}, {threshold: 0.4});
+sections.forEach(id => { const el = document.getElementById(id); if(el) obs.observe(el); });
+
+// SCROLL ANIMATIONS
+const slideObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, {threshold: 0.1});
+
+document.querySelectorAll('.judo-card, .game-card, .trait-card, .stat-card').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(30px)';
+  el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  slideObserver.observe(el);
+});
+</script>
+</body>
+</html>
